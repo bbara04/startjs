@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Enhanced Readability Activation Page</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-color: #d3cbad;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #activationSection {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f3de9f;
+            border-radius: 8px;
+            max-width: 600px;
+            color: #3E2723;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #lastActivationTime {
+            font-size: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            margin-top: 1rem;
+            background-color: #FFA000;
+            color: #332f28;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #FF8F00;
+        }
+
+        @media (min-width: 600px) {
+            .container {
+                width: 600px; 
+                display: flex; 
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div id="activationSection">
+            <h2 id="status" style="color: #3E2723;">Server status: .....</h2>
+            <p style="color: #332f28;">Click the button to activate the feature and display the last activation time.</p>
+            <button style="color: #3E2723;" onclick="runScript()">Activate</button>
+            <p style="color: #3E2723;" id="lastActivationTime">Last activated at:\n</p>
+        </div>
+    </main>
+    <script>
+
+        fetch(`/check-device?ip=192.168.1.164`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultElement = document.getElementById('status');
+                    if (data.active) {
+                        resultElement.textContent = 'Server status: Online';
+                        resultElement.style.color = '#388E3C';
+                    } else {
+                        resultElement.textContent = 'Server status: Offline';
+                        resultElement.style.color = '#D32F2F';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while contacting the oracle.');
+                });
+
+        async function runScript() {
+            await fetch('/run-script', { method: 'POST' })
+            await fetchFileContent()
+        }
+
+        async function fetchFileContent() {
+            try {
+                const response = await fetch('/read-file', { method: 'GET' });
+                const content = await response.text();
+                displayOutput(content);
+            } catch (error) {
+                console.error('Hiba történt:', error);
+                alert('Hiba történt a szerverrel való kommunikáció során');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchFileContent();
+        });
+
+        function handleResponse(response) {
+            if (!response.ok) {
+                throw new Error('Hiba a szerver válaszában');
+            }
+            return response.text();
+        }
+
+        function handleError(error) {
+            console.error('Hiba történt:', error);
+            alert('Hiba történt a szerverrel való kommunikáció során');
+        }
+
+        function displayOutput(output) {
+            document.getElementById('lastActivationTime').textContent = output;
+        }
+    </script>
+</body>
+</html>
