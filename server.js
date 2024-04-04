@@ -33,7 +33,7 @@ app.get('/read-file', async (req, res) => {
 });
 
 app.get('/check-device', (req, res) => {
-    const ipAddress = req.query.ip;
+    const ipAddress = "192.168.1.163";
 
     if (!ipAddress) {
         return res.status(400).send({ error: 'No IP address provided' });
