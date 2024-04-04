@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <title>Enhanced Readability Activation Page</title>
+    <title>BBARA Server starter</title>
     <style>
         html, body {
             height: 100%;
@@ -63,14 +63,14 @@
     <main class="container">
         <div id="activationSection">
             <h2 id="status" style="color: #3E2723;">Server status: .....</h2>
-            <p style="color: #332f28;">Click the button to activate the feature and display the last activation time.</p>
-            <button style="color: #3E2723;" onclick="runScript()">Activate</button>
-            <p style="color: #3E2723;" id="lastActivationTime">Last activated at:\n</p>
+            <p style="color: #332f28;">Click the button to power on the server and display the last time the server has been started.</p>
+            <button style="color: #3E2723;" onclick="runScript()">Power ON</button>
+            <p style="color: #3E2723;" id="lastActivationTime">Last time started at:\n</p>
         </div>
     </main>
     <script>
 
-        fetch(`/check-device?ip=192.168.1.164`)
+        fetch(`/check-device?ip=192.168.1.163`)
                 .then(response => response.json())
                 .then(data => {
                     const resultElement = document.getElementById('status');

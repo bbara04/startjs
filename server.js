@@ -39,7 +39,7 @@ app.get('/check-device', (req, res) => {
         return res.status(400).send({ error: 'No IP address provided' });
     }
 
-    ping.promise.probe(ipAddress, { timeout: 10 })
+    ping.promise.probe(ipAddress, { timeout: 3 })
         .then((result) => {
             res.send({ active: result.alive });
         })
