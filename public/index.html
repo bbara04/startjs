@@ -94,7 +94,10 @@
 
         async function runScript() {
             // Disable the button after it's clicked once
-            document.getElementById('powerButton').disabled = true;
+            const powerButton = document.getElementById('powerButton');
+            powerButton.textContent = 'Starting...';
+            powerButton.disabled = true;
+
 
             await fetch('/run-script', { method: 'POST' })
             await fetchFileContent()
