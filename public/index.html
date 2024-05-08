@@ -50,6 +50,12 @@
             background-color: #FF8F00;
         }
 
+        /* Add this for the active state of the button */
+        button:active {
+            background-color: #FF6F00; /* Darker shade for pressing effect */
+            transform: scale(0.98);    /* Slightly scale down */
+        }
+
         @media (min-width: 600px) {
             .container {
                 width: 600px; 
@@ -69,7 +75,6 @@
         </div>
     </main>
     <script>
-
         fetch(`/check-device`)
                 .then(response => response.json())
                 .then(data => {
