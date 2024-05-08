@@ -70,7 +70,7 @@
         <div id="activationSection">
             <h2 id="status" style="color: #3E2723;">Server status: .....</h2>
             <p style="color: #332f28;">Click the button to power on the server and display the last time the server has been started.</p>
-            <button style="color: #3E2723;" onclick="runScript()">Power ON</button>
+            <button id="powerButton" style="color: #3E2723;" onclick="runScript()">Power ON</button>
             <p style="color: #3E2723;" id="lastActivationTime">Last time started at:\n</p>
         </div>
     </main>
@@ -93,6 +93,9 @@
                 });
 
         async function runScript() {
+            // Disable the button after it's clicked once
+            document.getElementById('powerButton').disabled = true;
+
             await fetch('/run-script', { method: 'POST' })
             await fetchFileContent()
         }
