@@ -12,6 +12,12 @@ const { readFile } = require('fs');
 app.use(express.static('public'));
 
 
+const fp = path.join(__dirname, 'last_start.txt');
+console.log(fp);
+
+
+
+
 
 async function readConfig() {
     try {
