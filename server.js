@@ -12,18 +12,22 @@ const { readFile } = require('fs');
 app.use(express.static('public'));
 
 
-// change this to the IP address of the device you want to ping
-let ipAddress
-try {
-    const data = fs.readFileSync('data.json', 'utf8');
-    ipAddress = JSON.parse(data);
-  } catch (err) {
-    console.error(err);
-  }
+
+async function readConfig() {
+    try {
+        const data = await fs.readFile('config.json', 'utf8');
+        const config = JSON.parse(data);
+        return config.ip_address;
+    } catch (error) {
+        console.error('Error reading config file:', error);
+        return null;
+    }
+}
+
 
 
 app.post('/laststart', (req, res) => {
-    exec('./run_script.sh', (error, stdout, stderr) => {
+    exec('./sendwol.sh', (error, stdout, stderr) => {
         if (error) {
             console.error(`Hiba történt: ${stderr}`);
             res.status(500).send('Hiba történt a szkript végrehajtása során');
@@ -44,9 +48,13 @@ app.get('/laststart', async (req, res) => {
     }
 });
 
-app.get('/checkstate', (req, res) => {
+
+app.get('/checkstate', async (req, res) => {
+
+    let ipAddress = await readConfig();
 
     if (!ipAddress) {
+        
         return res.status(400).send({ error: 'No IP address provided' });
     }
 
