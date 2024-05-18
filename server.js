@@ -12,13 +12,6 @@ const { readFile } = require('fs');
 app.use(express.static('public'));
 
 
-const fp = path.join(__dirname, 'last_start.txt');
-console.log(fp);
-
-
-
-
-
 async function readConfig() {
     try {
         const data = await fs.readFile('config.json', 'utf8');
@@ -46,7 +39,7 @@ app.post('/laststart', (req, res) => {
 
 app.get('/laststart', async (req, res) => {
     try {
-        const fileContent = await fs.readFile(path.join(__dirname, 'last_start.txt'), 'utf-8');
+        const fileContent = await fs.readFile(path.join(__dirname, 'last_start'), 'utf-8');
         res.send(fileContent);
     } catch (error) {
         console.error('Hiba történt:', error.message);
