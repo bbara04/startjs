@@ -50,10 +50,9 @@
             background-color: #FF8F00;
         }
 
-        /* Add this for the active state of the button */
         button:active {
-            background-color: #FF6F00; /* Darker shade for pressing effect */
-            transform: scale(0.98);    /* Slightly scale down */
+            background-color: #FF6F00; 
+            transform: scale(0.98); 
         }
 
         @media (min-width: 600px) {
@@ -70,12 +69,13 @@
         <div id="activationSection">
             <h2 id="status" style="color: #3E2723;">Server status: .....</h2>
             <p style="color: #332f28;">Click the button to power on the server and display the last time the server has been started.</p>
-            <button id="powerButton" style="color: #3E2723;" onclick="runScript()">Power ON</button>
+            <button id="powerButton" style="color: #3E2723;" onclick="powerButtonClick()">Power ON</button>
             <p style="color: #3E2723;" id="lastActivationTime">Last time started at:\n</p>
         </div>
     </main>
     <script>
-        fetch(`/check-device`)
+        // Get the status of the server
+        fetch(`/checkstate`)
                 .then(response => response.json())
                 .then(data => {
                     const resultElement = document.getElementById('status');
@@ -89,50 +89,43 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while contacting the oracle.');
+                    alert('An error occurred while contacting the server.');
                 });
 
-        async function runScript() {
+        // Add event listener to fetch last starting time when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchFileContent();
+        });
+
+        // Power button click event handler
+        async function powerButtonClick() {
             // Disable the button after it's clicked once
             const powerButton = document.getElementById('powerButton');
             powerButton.textContent = 'Starting...';
             powerButton.disabled = true;
 
 
-            await fetch('/run-script', { method: 'POST' })
-            await fetchFileContent()
+            await fetch('/laststart', { method: 'POST' })
+            await fetchLastStartFile()
         }
 
-        async function fetchFileContent() {
+        // fetch the last time the server has been started
+        async function fetchLastStartFile() {
             try {
-                const response = await fetch('/read-file', { method: 'GET' });
+                const response = await fetch('/laststart', { method: 'GET' });
                 const content = await response.text();
-                displayOutput(content);
+
+                // Display last time the server has been started
+                document.getElementById('lastActivationTime').textContent = content;
+
             } catch (error) {
                 console.error('Hiba történt:', error);
                 alert('Hiba történt a szerverrel való kommunikáció során');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            fetchFileContent();
-        });
+        
 
-        function handleResponse(response) {
-            if (!response.ok) {
-                throw new Error('Hiba a szerver válaszában');
-            }
-            return response.text();
-        }
-
-        function handleError(error) {
-            console.error('Hiba történt:', error);
-            alert('Hiba történt a szerverrel való kommunikáció során');
-        }
-
-        function displayOutput(output) {
-            document.getElementById('lastActivationTime').textContent = output;
-        }
     </script>
 </body>
 </html>

@@ -7,10 +7,22 @@ const app = express();
 const port = 3000;
 
 const ping = require('ping');
+const { readFile } = require('fs');
 
 app.use(express.static('public'));
 
-app.post('/run-script', (req, res) => {
+
+// change this to the IP address of the device you want to ping
+let ipAddress
+try {
+    const data = fs.readFileSync('data.json', 'utf8');
+    ipAddress = JSON.parse(data);
+  } catch (err) {
+    console.error(err);
+  }
+
+
+app.post('/laststart', (req, res) => {
     exec('./run_script.sh', (error, stdout, stderr) => {
         if (error) {
             console.error(`Hiba történt: ${stderr}`);
@@ -22,9 +34,9 @@ app.post('/run-script', (req, res) => {
     });
 });
 
-app.get('/read-file', async (req, res) => {
+app.get('/laststart', async (req, res) => {
     try {
-        const fileContent = await fs.readFile(path.join(__dirname, 'public', 'last_start.txt'), 'utf-8');
+        const fileContent = await fs.readFile(path.join(__dirname, 'last_start.txt'), 'utf-8');
         res.send(fileContent);
     } catch (error) {
         console.error('Hiba történt:', error.message);
@@ -32,8 +44,7 @@ app.get('/read-file', async (req, res) => {
     }
 });
 
-app.get('/check-device', (req, res) => {
-    const ipAddress = "192.168.1.163";
+app.get('/checkstate', (req, res) => {
 
     if (!ipAddress) {
         return res.status(400).send({ error: 'No IP address provided' });
