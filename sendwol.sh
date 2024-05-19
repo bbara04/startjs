@@ -4,7 +4,7 @@
 current_datetime=$(date +"%Y-%m-%d, %H:%M")
 
 # Fájl elérési útja és neve
-file_path="./public/last_start.txt"
+file_path="./last_start"
 
 # Dátum és idő kiírása a fájlba
 echo "$current_datetime" > "$file_path"
