@@ -105,6 +105,14 @@
             powerButton.disabled = true;
 
 
+            const resultElement = document.getElementById('status');
+            if (resultElement.textContent === 'Server status: Online') {
+                alert('The server is already running.');
+                powerButton.textContent = 'Power ON';
+                powerButton.disabled = false;
+                return;
+            }
+
             await fetch('/laststart', { method: 'POST' })
             await fetchLastStartFile()
         }
