@@ -25,8 +25,16 @@ async function readConfig() {
 
 
 
-app.post('/laststart', (req, res) => {
-    exec('./sendwol.sh', (error, stdout, stderr) => {
+app.get('/start', (req, res) => {
+    const username = req.query.username;
+
+    console.log(`Felhasználó: ${username}`);
+
+    if (!username) {
+        return res.status(400).send('Hiányzó felhasználónév');
+    }
+
+    exec(`./sendwol.sh ${username}`, (error, stdout, stderr) => {
         if (error) {
             console.error(`Hiba történt: ${stderr}`);
             res.status(500).send('Hiba történt a szkript végrehajtása során');
@@ -36,17 +44,6 @@ app.post('/laststart', (req, res) => {
         }
     });
 });
-
-app.get('/laststart', async (req, res) => {
-    try {
-        const fileContent = await fs.readFile(path.join(__dirname, 'last_start'), 'utf-8');
-        res.send(fileContent);
-    } catch (error) {
-        console.error('Hiba történt:', error.message);
-        res.status(500).send('Hiba történt a fájl olvasása során');
-    }
-});
-
 
 app.get('/checkstate', async (req, res) => {
 
