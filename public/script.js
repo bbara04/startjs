@@ -1,6 +1,15 @@
 const username = localStorage.getItem('user');
 
 if (username) {
+    const userField = document.getElementsByClassName('user')[0];
+    userField.textContent = "Current user: " + username;
+    const resetUserButton = document.getElementsByClassName('reset-user-button')[0];
+    resetUserButton.addEventListener('click', () => {
+        localStorage.removeItem('user');
+        location.reload();
+    });
+    const resetUserContainer = document.getElementsByClassName('reset-user-container')[0];
+    resetUserContainer.style.visibility = 'visible';
     
     // Create the container div
     let container = document.createElement('div');
@@ -79,6 +88,17 @@ if (username) {
     input.id = 'userInput';
     input.className = 'userInput';
     input.placeholder = 'Név';
+    input.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            let name = input.value.trim();
+            if (!name) {
+                alert('Kérlek add meg a neved!');
+                return;
+            }
+            localStorage.setItem('user', name);
+            location.reload();
+        }
+    });
     container.appendChild(input);
 
     // Create the submit button
