@@ -1,8 +1,8 @@
-const username = localStorage.getItem('user');
+const username = localStorage.getItem('user').toUpperCase();
 
 if (username) {
     const userField = document.getElementsByClassName('user')[0];
-    userField.textContent = "Current user: " + username;
+    userField.textContent = username;
     const resetUserButton = document.getElementsByClassName('reset-user-button')[0];
     resetUserButton.addEventListener('click', () => {
         localStorage.removeItem('user');
