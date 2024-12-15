@@ -27,6 +27,7 @@ async function readConfig() {
 
 app.get('/start', (req, res) => {
     const username = req.query.username;
+    const ipAddress = req.ip;
 
     console.log(`Felhasználó: ${username}`);
 
@@ -34,7 +35,7 @@ app.get('/start', (req, res) => {
         return res.status(400).send('Hiányzó felhasználónév');
     }
 
-    exec(`./sendwol.sh ${username}`, (error, stdout, stderr) => {
+    exec(`./sendwol.sh ${username} ${ipAddress}`, (error, stdout, stderr) => {
         if (error) {
             console.error(`Hiba történt: ${stderr}`);
             res.status(500).send('Hiba történt a szkript végrehajtása során');
