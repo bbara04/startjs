@@ -1,4 +1,6 @@
-const username = localStorage.getItem('user').toUpperCase();
+let username = localStorage.getItem('user');
+username = username?.toUpperCase();
+
 
 if (username) {
     const userField = document.getElementsByClassName('user')[0];
