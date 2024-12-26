@@ -29,22 +29,28 @@ if (username) {
     status.id = 'status';
     status.className = 'status';
     status.textContent = 'Server status: Loading...';
-    fetch(`/checkstate`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.active) {
-                status.textContent = 'Server status: Online';
-                status.className = 'status online-status';
-            } else {
-                status.textContent = 'Server status: Offline';
-                status.className = 'status offline-status';
-                button.disabled = false;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while contacting the server.');
-        });
+    function updateStatus() {
+        fetch(`/checkstate`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.active) {
+                    status.textContent = 'Server status: Online';
+                    status.className = 'status online-status';
+                    button.disabled = false;
+                } else {
+                    status.textContent = 'Server status: Offline';
+                    status.className = 'status offline-status';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while contacting the server.');
+            });
+    }
+
+    setInterval(updateStatus, 2000);
+
+    updateStatus();
 
     // Append the elements to the container
     container.appendChild(status);

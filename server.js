@@ -23,7 +23,33 @@ async function readConfig() {
     }
 }
 
+// Replace with the IP or hostname of your remote Linux server
+const host = '192.168.1.163';
 
+// Global variable to store server status
+let serverStatus = false;
+
+// Function to check server status
+function checkServerStatus() {
+    ping.sys.probe(host, function(isAlive) {
+        serverStatus = isAlive; // Update the global variable
+        if (isAlive) {
+            console.log(`Server at ${host} is ON`);
+        } else {
+            console.log(`Server at ${host} is OFF`);
+        }
+    });
+}
+
+// Start the interval to check every 30 seconds
+setInterval(checkServerStatus, 60000);
+
+// Initial check when the script runs
+checkServerStatus();
+
+app.get('/checkstate', async (req, res) => {
+    res.send({ active: serverStatus });
+});
 
 app.get('/start', (req, res) => {
     const username = req.query.username;
@@ -45,24 +71,6 @@ app.get('/start', (req, res) => {
             res.send(stdout);
         }
     });
-});
-
-app.get('/checkstate', async (req, res) => {
-
-    let ipAddress = await readConfig();
-
-    if (!ipAddress) {
-        
-        return res.status(400).send({ error: 'No IP address provided' });
-    }
-
-    ping.promise.probe(ipAddress, { timeout: 3 })
-        .then((result) => {
-            res.send({ active: result.alive });
-        })
-        .catch((error) => {
-            res.status(500).send({ error: 'Error pinging the IP address' });
-        });
 });
 
 app.listen(port, () => {
