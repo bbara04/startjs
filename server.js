@@ -2,6 +2,7 @@ import express from 'express';
 import { exec } from 'child_process';
 import fs from 'fs/promises';
 import ping from 'ping';
+import { stat } from 'fs';
 
 const app = express();
 const port = 3000;
@@ -32,8 +33,10 @@ function checkServerStatus() {
         serverStatus = isAlive; // Update the global variable
         if (isAlive) {
             console.log(`Server at ${host} is ON`);
+            return true;
         } else {
             console.log(`Server at ${host} is OFF`);
+            return false;
         }
     });
 }
@@ -45,7 +48,8 @@ setInterval(checkServerStatus, 60000);
 checkServerStatus();
 
 app.get('/checkstate', async (req, res) => {
-    res.send({ active: serverStatus });
+    const status = checkServerStatus();
+    res.send({ active: status });
 });
 
 app.get('/start', (req, res) => {
