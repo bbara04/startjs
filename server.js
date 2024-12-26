@@ -7,7 +7,6 @@ const app = express();
 const port = 3000;
 
 const ping = require('ping');
-const { readFile } = require('fs');
 
 app.use(express.static('public'));
 
@@ -24,7 +23,7 @@ async function readConfig() {
 }
 
 // Replace with the IP or hostname of your remote Linux server
-const host = '192.168.1.163';
+const host = await readConfig();
 
 // Global variable to store server status
 let serverStatus = false;
