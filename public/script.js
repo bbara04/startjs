@@ -36,10 +36,10 @@ if (username) {
                 if (data.active) {
                     status.textContent = 'Server status: Online';
                     status.className = 'status online-status';
-                    button.disabled = false;
                 } else {
                     status.textContent = 'Server status: Offline';
                     status.className = 'status offline-status';
+                    button.disabled = false;
                 }
             })
             .catch(error => {
