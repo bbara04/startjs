@@ -1,12 +1,10 @@
-const express = require('express');
-const { exec } = require('child_process');
-const path = require('path');
-const fs = require('fs').promises;
+import express from 'express';
+import { exec } from 'child_process';
+import fs from 'fs/promises';
+import ping from 'ping';
 
 const app = express();
 const port = 3000;
-
-const ping = require('ping');
 
 app.use(express.static('public'));
 
