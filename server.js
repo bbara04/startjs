@@ -7,11 +7,14 @@ import { stat } from 'fs';
 const app = express();
 const port = 3000;
 
+app.use(express.static('public'));
+
+
 async function readConfig() {
     try {
         const data = await fs.readFile('config.json', 'utf8');
         const config = JSON.parse(data);
-        return config;
+        return config.ip_address;
     } catch (error) {
         console.error('Error reading config file:', error);
         return null;
@@ -19,23 +22,7 @@ async function readConfig() {
 }
 
 // Replace with the IP or hostname of your remote Linux server
-const config = await readConfig();
-const host = config.ipaddress;
-const blacklist = config.blacklist;
-
-
-const ipBlacklistMiddleware = (req, res, next) => {
-    const clientIp = req.ip || req.connection.remoteAddress;
-
-    if (blacklist.includes(clientIp)) {
-        return res.status(403).send('Access denied: Your IP is blacklisted. Contact the administrator for more information.');
-    }
-};
-
-app.use(ipBlacklistMiddleware);
-
-app.use(express.static('public'));
-
+const host = await readConfig();
 
 // Global variable to store server status and last start time
 let serverStatus = false;
