@@ -24,8 +24,9 @@ async function readConfig() {
 // Replace with the IP or hostname of your remote Linux server
 const host = await readConfig();
 
-// Global variable to store server status
+// Global variable to store server status and last start time
 let serverStatus = false;
+let lastStart = null;
 
 // Function to check server status
 function checkServerStatus() {
@@ -41,14 +42,18 @@ function checkServerStatus() {
     });
 }
 
-// Start the interval to check every 30 seconds
+// Start the interval to check every 60 seconds
 setInterval(checkServerStatus, 60000);
 
 // Initial check when the script runs
 checkServerStatus();
 
 app.get('/checkstate', async (req, res) => {
-    const status = checkServerStatus();
+    let status = serverStatus;
+    actualDate = new Date();
+    if (Math.abs(lastStart - actualDate) < 120000) {
+        status = true;
+    }
     res.send({ active: status });
 });
 
@@ -69,9 +74,11 @@ app.get('/start', (req, res) => {
             res.status(500).send('Hiba történt a szkript végrehajtása során');
         } else {
             console.log(`Szkript kimenet: ${stdout}`);
+            lastStart = new Date();
             res.send(stdout);
         }
     });
+
 });
 
 app.listen(port, () => {
