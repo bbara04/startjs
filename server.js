@@ -50,7 +50,7 @@ checkServerStatus();
 
 app.get('/checkstate', async (req, res) => {
     let status = serverStatus;
-    actualDate = new Date();
+    let actualDate = new Date();
     if (Math.abs(lastStart - actualDate) < 120000) {
         status = true;
     }
