@@ -1,8 +1,7 @@
-import express from 'express';
 import { exec } from 'child_process';
+import express from 'express';
 import fs from 'fs/promises';
 import ping from 'ping';
-import { stat } from 'fs';
 
 const app = express();
 const port = 3000;
@@ -52,7 +51,7 @@ app.get('/checkstate', async (req, res) => {
     let status = serverStatus;
     let actualDate = new Date();
     if (Math.abs(lastStart - actualDate) < 120000) {
-        status = true;
+        status = checkServerStatus();
     }
     res.send({ active: status });
 });
